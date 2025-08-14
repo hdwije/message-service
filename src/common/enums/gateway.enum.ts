@@ -1,0 +1,4 @@
+export enum GATEWAY {
+  TWILIO = 'TWILIO',
+  MESSAGEBIRD = 'MESSAGEBIRD',
+}
