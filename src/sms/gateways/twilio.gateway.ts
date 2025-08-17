@@ -31,10 +31,21 @@ export class TwilioGateway implements Gateway {
 
     // console.log({ message: resultMessage });
 
-    return { result };
+    return {
+      id: '12jnads212njnoj',
+      from: '+1234567890',
+      to,
+      message: result,
+    };
   }
 
-  tempWaitOneSecond(message: string): Promise<string> {
+  async listMessages() {
+    const messages = await this.client.messages.list({ limit: 20 });
+
+    return messages;
+  }
+
+  private tempWaitOneSecond(message: string): Promise<string> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(message);

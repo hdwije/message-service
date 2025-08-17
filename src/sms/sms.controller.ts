@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { ApiTags } from '@nestjs/swagger';
 import { SendSmsDto } from './dtos';
@@ -16,5 +16,10 @@ export class SmsController {
   @Post('receive')
   receiveSms(@Body() body: object) {
     console.log('RECEIVED BODY', body);
+  }
+
+  @Get('list')
+  listMessages() {
+    return this.smsService.listMessages();
   }
 }

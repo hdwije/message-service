@@ -25,7 +25,14 @@ export class SmsService {
 
   async sendSms(dto: SendSmsDto) {
     const { message, to } = dto;
+    const sentMessage = await this.gateway.sendSms(to, message);
 
-    await this.gateway.sendSms(to, message);
+    return sentMessage;
+  }
+
+  async listMessages() {
+    const messages = await this.gateway.listMessages();
+
+    return messages;
   }
 }
