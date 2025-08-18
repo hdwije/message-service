@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Gateway } from './interfaces';
 import { SystemConfig } from '../common/configs';
-import { GATEWAY } from 'src/common/enums';
+import { GATEWAY } from '../common/enums';
 import { TwilioGateway } from './gateways';
 import { SendSmsDto } from './dtos';
 
