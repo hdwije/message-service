@@ -3,4 +3,5 @@ export type Sms = {
   to: string;
   from: string;
   body: string;
+  dateSent: Date;
 };

@@ -38,17 +38,28 @@ export class TwilioGateway {
     };
   }
 
-  async listMessages(pageSize: number, nextPageToken?: string) {
+  async listMessages(pageSize: number, pageToken?: string) {
+    console.log({ pageSize, pageToken });
+
     const messagePage = await this.client.messages.page({
       pageSize,
-      pageToken: nextPageToken,
+      pageToken,
     });
+
+    const parsedNextUrl = messagePage.nextPageUrl
+      ? new URL(messagePage.nextPageUrl)
+      : undefined;
+
+    const nextPageToken = parsedNextUrl
+      ? parsedNextUrl.searchParams.get('PageToken')
+      : undefined;
 
     const messages: Sms[] = messagePage.instances.map((instance) => ({
       id: instance.sid,
       to: instance.to,
       body: instance.body,
       from: instance.from,
+      dateSent: instance.dateSent,
     }));
 
     return { messages, nextPageToken };
