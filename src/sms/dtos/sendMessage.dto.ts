@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class SendSmsDto {
+export class SendMessageDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -10,5 +10,5 @@ export class SendSmsDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  message: string;
+  body: string;
 }

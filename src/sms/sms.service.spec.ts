@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SmsService } from './sms.service';
 import { SystemConfig } from '../common/configs';
-import { TwilioGateway } from './gateways';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TwilioConfig } from './configs';
+import { TwilioConfig } from '../twilio/configs';
+import { TwilioGateway } from '../twilio/twilio.gateway';
 
 describe('SmsService', () => {
   let service: SmsService;
@@ -14,9 +14,9 @@ describe('SmsService', () => {
       providers: [
         SmsService,
         SystemConfig,
-        TwilioGateway,
         ConfigService,
         TwilioConfig,
+        TwilioGateway,
       ],
     }).compile();
 

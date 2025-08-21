@@ -1,38 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Gateway } from './interfaces';
-import { SystemConfig } from '../common/configs';
-import { GATEWAY } from '../common/enums';
-import { TwilioGateway } from './gateways';
-import { SendSmsDto } from './dtos';
+import { Injectable } from '@nestjs/common';
+import { ListMessagesDto, SendMessageDto } from './dtos';
+import { TwilioGateway } from '../twilio/twilio.gateway';
 
 @Injectable()
 export class SmsService {
-  private gateway: Gateway;
+  constructor(private readonly twilioGateway: TwilioGateway) {}
 
-  constructor(
-    private readonly systemConfig: SystemConfig,
-    private readonly twilioGateway: TwilioGateway,
-  ) {
-    switch (this.systemConfig.gateway as GATEWAY) {
-      case GATEWAY.TWILIO:
-        this.gateway = twilioGateway;
-        break;
+  async sendMessage(dto: SendMessageDto) {
+    const { body, to } = dto;
+    const message = await this.twilioGateway.sendMessage(to, body);
 
-      default:
-        throw new NotFoundException('Environment gateway is not found');
-    }
+    return message;
   }
 
-  async sendSms(dto: SendSmsDto) {
-    const { message, to } = dto;
-    const sentMessage = await this.gateway.sendSms(to, message);
+  async listMessages(dto: ListMessagesDto) {
+    const { pageSize, nextPageToken } = dto;
+    const messagesWithNextToken = await this.twilioGateway.listMessages(
+      pageSize,
+      nextPageToken,
+    );
 
-    return sentMessage;
-  }
-
-  async listMessages() {
-    const messages = await this.gateway.listMessages();
-
-    return messages;
+    return messagesWithNextToken;
   }
 }

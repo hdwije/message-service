@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Twilio } from 'twilio';
-import { TwilioConfig } from '../configs';
-import { Gateway } from '../interfaces';
+import { TwilioConfig } from './configs';
+import { Sms } from '../common/types';
 
 @Injectable()
-export class TwilioGateway implements Gateway {
+export class TwilioGateway {
   private client: Twilio;
   private fromNumber: string | undefined;
 
@@ -16,11 +16,10 @@ export class TwilioGateway implements Gateway {
     );
   }
 
-  async sendSms(to: string, message: string) {
-    console.log('to number', to);
-    console.log('message', message);
-
-    const result = await this.tempWaitOneSecond('1 second later sms is sent');
+  async sendMessage(to: string, body: string) {
+    const result = await this.tempWaitOneSecond(
+      `1 second later sms is sent: ${body}`,
+    );
 
     // const resultMessage = await this.client.messages.create({
     //   body: message,
@@ -33,16 +32,26 @@ export class TwilioGateway implements Gateway {
 
     return {
       id: '12jnads212njnoj',
-      from: '+1234567890',
+      from: this.fromNumber,
       to,
-      message: result,
+      body: result,
     };
   }
 
-  async listMessages() {
-    const messages = await this.client.messages.list({ limit: 20 });
+  async listMessages(pageSize: number, nextPageToken?: string) {
+    const messagePage = await this.client.messages.page({
+      pageSize,
+      pageToken: nextPageToken,
+    });
 
-    return messages;
+    const messages: Sms[] = messagePage.instances.map((instance) => ({
+      id: instance.sid,
+      to: instance.to,
+      body: instance.body,
+      from: instance.from,
+    }));
+
+    return { messages, nextPageToken };
   }
 
   private tempWaitOneSecond(message: string): Promise<string> {

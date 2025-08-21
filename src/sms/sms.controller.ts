@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { ApiTags } from '@nestjs/swagger';
-import { SendSmsDto } from './dtos';
+import { ListMessagesDto, SendMessageDto } from './dtos';
 
 @Controller('sms')
 @ApiTags('SMS')
@@ -9,8 +9,8 @@ export class SmsController {
   constructor(private readonly smsService: SmsService) {}
 
   @Post('send')
-  sendSms(@Body() dto: SendSmsDto) {
-    return this.smsService.sendSms(dto);
+  sendMessage(@Body() dto: SendMessageDto) {
+    return this.smsService.sendMessage(dto);
   }
 
   @Post('receive')
@@ -19,7 +19,7 @@ export class SmsController {
   }
 
   @Get('list')
-  listMessages() {
-    return this.smsService.listMessages();
+  listMessages(@Query() dto: ListMessagesDto) {
+    return this.smsService.listMessages(dto);
   }
 }

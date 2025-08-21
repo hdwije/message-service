@@ -3,8 +3,8 @@ import { SmsController } from './sms.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SmsService } from './sms.service';
 import { SystemConfig } from '../common/configs';
-import { TwilioGateway } from './gateways';
-import { TwilioConfig } from './configs';
+import { TwilioConfig } from '../twilio/configs';
+import { TwilioGateway } from '../twilio/twilio.gateway';
 
 describe('SmsController', () => {
   let controller: SmsController;
@@ -15,9 +15,9 @@ describe('SmsController', () => {
       providers: [
         SmsService,
         SystemConfig,
-        TwilioGateway,
         ConfigService,
         TwilioConfig,
+        TwilioGateway,
       ],
       controllers: [SmsController],
     }).compile();
